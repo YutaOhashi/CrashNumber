@@ -1,0 +1,26 @@
+# Unity generated folders
+Library/
+Temp/
+Obj/
+Build/
+Builds/
+Logs/
+
+# Rider / Visual Studio
+.vs/
+*.csproj
+*.unityproj
+*.sln
+*.user
+*.tmp
+*.pidb
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# TextMesh Pro files
+*.Asset
+
+# Crash logs
+*.dmp
