@@ -4,21 +4,40 @@ using System.Collections;
 
 public class BlockSpawner : MonoBehaviour
 {
-    [Header("Block Settings")]
-    public GameObject blockPrefab;
+    [Header("Block Prefabs")]
+    public GameObject redPrefab;
+    public GameObject bluePrefab;
+    public GameObject greenPrefab;
+
+    [Header("Spawn Settings")]
     public float moveSpeed = 5f;
     public float minX = -3.6f;
     public float maxX = 3.6f;
     public float spawnY = 4.5f;
 
     private GameObject currentBlock;
-    private bool isWaitingNext = false;   // ★次の生成を待っているか
+    private bool isWaitingNext = false;
+
+    public enum BlockType { Red, Blue, Green }
+    public BlockType nextBlockType = BlockType.Red; // デフォルト赤
 
     void Update()
     {
-        // ★待機中は操作も生成もできない
-        if (isWaitingNext)
-            return;
+        // ★ Qキーで次のブロックを青に
+        if (Keyboard.current.qKey.wasPressedThisFrame)
+        {
+            nextBlockType = BlockType.Blue;
+            Debug.Log("次のブロックは青になります！");
+        }
+
+        // ★ Gキーで次のブロックを緑に
+        if (Keyboard.current.gKey.wasPressedThisFrame)
+        {
+            nextBlockType = BlockType.Green;
+            Debug.Log("次のブロックは緑になります！");
+        }
+
+        if (isWaitingNext) return;
 
         // ブロックがなければ生成
         if (currentBlock == null)
@@ -29,97 +48,86 @@ public class BlockSpawner : MonoBehaviour
 
         Rigidbody2D body = currentBlock.GetComponent<Rigidbody2D>();
 
-        // 落下中のブロックは操作不可
+        // 落下中は操作不可
         if (body.bodyType == RigidbodyType2D.Dynamic)
         {
             currentBlock = null;
             return;
         }
 
+        // 左右移動
         Vector3 pos = currentBlock.transform.position;
-
-        // ← A
-        if (Keyboard.current.aKey.isPressed)
-            pos.x -= moveSpeed * Time.deltaTime;
-
-        // → D
-        if (Keyboard.current.dKey.isPressed)
-            pos.x += moveSpeed * Time.deltaTime;
-
+        if (Keyboard.current.aKey.isPressed) pos.x -= moveSpeed * Time.deltaTime;
+        if (Keyboard.current.dKey.isPressed) pos.x += moveSpeed * Time.deltaTime;
         pos.x = Mathf.Clamp(pos.x, minX, maxX);
         currentBlock.transform.position = pos;
 
-        // F で落下
+        // Fで落下
         if (Keyboard.current.fKey.wasPressedThisFrame)
         {
             body.bodyType = RigidbodyType2D.Dynamic;
             currentBlock = null;
-
-            // ★1秒待ってから次のブロック生成
             StartCoroutine(WaitAndSpawnNext());
         }
     }
 
-    // ----------------------------------------
-    // ブロック生成（重み付きランダム形状・ランダム値付き）
-    // ----------------------------------------
     void SpawnNewBlock()
     {
         Vector3 spawnPos = new Vector3(0f, spawnY, 0f);
+        GameObject prefabToSpawn = redPrefab; // デフォルト赤
 
-        // ブロック生成
-        currentBlock = Instantiate(blockPrefab, spawnPos, Quaternion.identity);
+        // nextBlockType に応じてPrefabを変更
+        switch (nextBlockType)
+        {
+            case BlockType.Red: prefabToSpawn = redPrefab; break;
+            case BlockType.Blue: prefabToSpawn = bluePrefab; break;
+            case BlockType.Green: prefabToSpawn = greenPrefab; break;
+        }
 
-        // Rigidbody を設定
+        currentBlock = Instantiate(prefabToSpawn, spawnPos, Quaternion.identity);
+
+        // 生成後はデフォルト赤に戻す
+        nextBlockType = BlockType.Red;
+
         Rigidbody2D rb = currentBlock.GetComponent<Rigidbody2D>();
         rb.bodyType = RigidbodyType2D.Kinematic;
 
-        // RedBlock コンポーネント取得
+        // 赤ブロックなら形状・値設定
         RedBlock block = currentBlock.GetComponent<RedBlock>();
         if (block != null)
         {
-            // ----------------------------------------
-            // 重み付きランダムで形状を決定
-            // 確率例: 〇=50%, □=35%, △=15%
-            // 0:〇, 1:△, 2:□
-            // ----------------------------------------
-            float r = Random.value; // 0～1 の乱数
+            float r = Random.value;
             int randomShape;
 
-            if (r < 0.8f) randomShape = 0; // 〇
-            else if (r < 0.95f) randomShape = 2; // □
-            else randomShape = 1; // △
+            if (r < 0.8f) randomShape = 0;
+            else if (r < 0.95f) randomShape = 2;
+            else randomShape = 1;
 
             block.shapeIndex = randomShape;
 
-            // 形状に応じて value をランダム設定
             switch (randomShape)
             {
-                case 0: // 〇
-                    block.value = Random.Range(1, 5);    // 1~4
-                    break;
-                case 1: // △
-                    block.value = Random.Range(5, 10);   // 5~9
-                    break;
-                case 2: // □
-                    block.value = Random.Range(10, 20);  // 10~19
-                    break;
+                case 0: block.value = Random.Range(1, 5); break;
+                case 1: block.value = Random.Range(5, 10); break;
+                case 2: block.value = Random.Range(10, 20); break;
             }
 
-            // すべての更新処理を呼ぶ
             block.ApplyAllUpdates();
+        }
+
+        // 青・緑ブロックなら Rigidbody 等の設定だけでOK
+        Rigidbody2D rbOther = currentBlock.GetComponent<Rigidbody2D>();
+        if (rbOther != null)
+        {
+            rbOther.gravityScale = 1f;
+            rbOther.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
         }
     }
 
-    // ----------------------------------------
-    // ★ 1秒待ってから次のブロックを生成
-    // ----------------------------------------
     IEnumerator WaitAndSpawnNext()
     {
         isWaitingNext = true;
-
-        yield return new WaitForSeconds(1f);   // ← ここで1秒待つ
-
+        yield return new WaitForSeconds(1f);
         isWaitingNext = false;
     }
 }
