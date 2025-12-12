@@ -1,5 +1,10 @@
 ﻿using UnityEngine;
 
+/// <summary>
+/// 赤ブロック同士の合体を検知するトリガー
+/// 緑・青ブロックには無効
+/// </summary>
+[RequireComponent(typeof(CircleCollider2D))]
 public class RedBlockMergeTrigger : MonoBehaviour
 {
     private RedBlock parentBlock;
@@ -9,12 +14,13 @@ public class RedBlockMergeTrigger : MonoBehaviour
     {
         parentBlock = GetComponentInParent<RedBlock>();
 
-        // Trigger Collider を取得／追加
+        // トリガー追加
         triggerCol = GetComponent<CircleCollider2D>();
-        if (triggerCol == null) triggerCol = gameObject.AddComponent<CircleCollider2D>();
+        if (triggerCol == null)
+            triggerCol = gameObject.AddComponent<CircleCollider2D>();
 
         triggerCol.isTrigger = true;
-        triggerCol.radius = 0.5f;  // 固定サイズ
+        triggerCol.radius = 0.5f;
         triggerCol.offset = Vector2.zero;
     }
 
@@ -23,8 +29,11 @@ public class RedBlockMergeTrigger : MonoBehaviour
         RedBlock otherBlock = other.GetComponentInParent<RedBlock>();
         if (otherBlock != null && parentBlock != null)
         {
+            // 同じ形状なら合体
             if (parentBlock.shapeIndex == otherBlock.shapeIndex)
                 parentBlock.MergeWith(otherBlock);
         }
+
+        // 青・緑ブロックには無効
     }
 }

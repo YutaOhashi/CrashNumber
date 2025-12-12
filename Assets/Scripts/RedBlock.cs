@@ -1,24 +1,29 @@
-﻿// ----------------------------
-// RedBlock.cs
-// ----------------------------
-using UnityEngine;
+﻿using UnityEngine;
 using TMPro;
 using System.Collections;
 using System.Collections.Generic;
 
+/// <summary>
+/// 赤ブロックの挙動
+/// - 赤ブロック同士は同じ形状なら合体
+/// - 青ブロックと衝突すると値を計算
+/// - 緑ブロックには何もしない
+/// </summary>
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(PolygonCollider2D))]
 public class RedBlock : MonoBehaviour
 {
-    public int value = 1;
-    public Sprite[] shapes;    // 0:〇, 1:△, 2:□, 3:☆, 4:♤, 5:♡
-    public TextMeshPro text;
+    public int value = 1;                       // 赤ブロックの値
+    public Sprite[] shapes;                     // 形状スプライト
+    public TextMeshPro text;                    // 値表示
+
+    [Header("Prefab References")]
+    public GameObject greenPrefab;              // 緑ブロックに変換するPrefab
 
     private SpriteRenderer sr;
     public Rigidbody2D rb;
     private PolygonCollider2D poly;
-    private bool isMerging = false;
-
+    private bool isMerging = false;             // 合体中フラグ
     [HideInInspector] public int shapeIndex = 0;
 
     void Awake()
@@ -40,7 +45,9 @@ public class RedBlock : MonoBehaviour
         ApplyAllUpdates();
     }
 
-    // ----------------------------------------
+    /// <summary>
+    /// 形状・物理・テキストをまとめて更新
+    /// </summary>
     public void ApplyAllUpdates()
     {
         UpdateShape();
@@ -50,47 +57,9 @@ public class RedBlock : MonoBehaviour
         UpdateText();
     }
 
-    IEnumerator StabilizeAfterMerge()
-    {
-        rb.bodyType = RigidbodyType2D.Kinematic;
-        yield return new WaitForSeconds(0.05f);
-        rb.bodyType = RigidbodyType2D.Dynamic;
-    }
-
-    void FixOverlap()
-    {
-        int wallLayer = LayerMask.GetMask("Wall");
-        Collider2D hit = Physics2D.OverlapCircle(transform.position, 0.1f, wallLayer);
-
-        if (hit)
-        {
-            Vector2 dir = (Vector2)(transform.position - hit.transform.position);
-            if (dir == Vector2.zero) dir = Vector2.right;
-
-            transform.position += (Vector3)dir.normalized * 0.1f;
-        }
-    }
-
-    void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (isMerging) return;
-
-        RedBlock other = collision.gameObject.GetComponent<RedBlock>();
-        if (other == null || other.isMerging) return;
-
-        if (this.shapeIndex == 5 && other.shapeIndex == 5)
-        {
-            this.isMerging = true;
-            other.isMerging = true;
-            Destroy(this.gameObject);
-            Destroy(other.gameObject);
-            return;
-        }
-
-        if (this.shapeIndex == other.shapeIndex)
-            MergeWith(other);
-    }
-
+    /// <summary>
+    /// 赤ブロック同士の合体
+    /// </summary>
     public void MergeWith(RedBlock other)
     {
         if (isMerging || other.isMerging) return;
@@ -102,24 +71,93 @@ public class RedBlock : MonoBehaviour
 
         smaller.isMerging = true;
         bigger.value += smaller.value;
-
         bigger.ApplyAllUpdates();
-        bigger.FixOverlap();
         bigger.StartCoroutine(bigger.StabilizeAfterMerge());
 
         Destroy(smaller.gameObject);
     }
 
+    IEnumerator StabilizeAfterMerge()
+    {
+        rb.bodyType = RigidbodyType2D.Kinematic;
+        yield return new WaitForSeconds(0.05f);
+        rb.bodyType = RigidbodyType2D.Dynamic;
+    }
+
+    /// <summary>
+    /// 青ブロックと衝突した場合の処理
+    /// </summary>
+    public void HandleBlueCollision(BlueBlock blue)
+    {
+        if (blue == null || blue.hasCollided) return;
+
+        blue.hasCollided = true;
+
+        int newValue = value - blue.value;
+        Destroy(blue.gameObject);
+
+        if (newValue < 0)
+        {
+            // 赤より青が大きい場合は緑ブロックに変換
+            ConvertToGreen(Mathf.Abs(newValue));
+        }
+        else if (newValue == 0)
+        {
+            // 値が0なら消滅
+            Destroy(gameObject);
+        }
+        else
+        {
+            value = newValue;
+            ApplyAllUpdates();
+        }
+    }
+
+    void ConvertToGreen(int greenValue)
+    {
+        if (greenPrefab != null)
+        {
+            GameObject green = Instantiate(greenPrefab, transform.position, Quaternion.identity);
+            GreenBlock greenBlock = green.GetComponent<GreenBlock>();
+            if (greenBlock != null)
+            {
+                greenBlock.Initialize(greenValue);
+            }
+        }
+        Destroy(gameObject);
+    }
+
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (isMerging) return;
+
+        // 赤ブロック同士の合体
+        RedBlock otherRed = collision.gameObject.GetComponent<RedBlock>();
+        if (otherRed != null && shapeIndex == otherRed.shapeIndex)
+        {
+            MergeWith(otherRed);
+        }
+
+        // 青ブロックとの衝突
+        BlueBlock blue = collision.gameObject.GetComponent<BlueBlock>();
+        if (blue != null)
+        {
+            HandleBlueCollision(blue);
+        }
+
+        // 緑ブロックには何もしない
+    }
+
+    #region 更新処理
     public void UpdateShape()
     {
-        if (value <= 4) shapeIndex = 0;       // 〇
-        else if (value <= 9) shapeIndex = 1;  // □
-        else if (value <= 19) shapeIndex = 2; // △
-        else if (value <= 29) shapeIndex = 3; // ☆
-        else if (value <= 49) shapeIndex = 4; // ♤
-        else shapeIndex = 5;                  // ♡
+        if (value <= 4) shapeIndex = 0;
+        else if (value <= 9) shapeIndex = 1;
+        else if (value <= 19) shapeIndex = 2;
+        else if (value <= 29) shapeIndex = 3;
+        else if (value <= 49) shapeIndex = 4;
+        else shapeIndex = 5;
 
-        // Nullチェックで安全に
         if (sr != null && shapes != null && shapes.Length > shapeIndex)
             sr.sprite = shapes[shapeIndex];
     }
@@ -130,7 +168,6 @@ public class RedBlock : MonoBehaviour
 
         poly.pathCount = sr.sprite.GetPhysicsShapeCount();
         List<Vector2> points = new List<Vector2>();
-
         for (int i = 0; i < poly.pathCount; i++)
         {
             points.Clear();
@@ -142,7 +179,6 @@ public class RedBlock : MonoBehaviour
     public void UpdatePhysics()
     {
         var mat = poly.sharedMaterial;
-
         if (value <= 4) { rb.mass = 0.3f; mat.bounciness = 0.6f; mat.friction = 0.1f; }
         else if (value <= 9) { rb.mass = 0.6f; mat.bounciness = 0.4f; mat.friction = 0.2f; }
         else if (value <= 19) { rb.mass = 0.9f; mat.bounciness = 0.3f; mat.friction = 0.3f; }
@@ -171,4 +207,5 @@ public class RedBlock : MonoBehaviour
         if (text != null)
             text.text = value.ToString();
     }
+    #endregion
 }

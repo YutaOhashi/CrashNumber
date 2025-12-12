@@ -144,6 +144,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 81c7a7c4b34cb614ba561b8af69419f1, type: 3}
   - {fileID: 21300000, guid: 0c8eece9c6ef9014584b67c35a01f398, type: 3}
   text: {fileID: 6626284998718690161}
+  greenPrefab: {fileID: 6037284058314114782, guid: 3f9c29cbc51bb244585e5e5305a2f7c6, type: 3}
   rb: {fileID: 0}
   shapeIndex: 0
 --- !u!60 &8270693112510031299

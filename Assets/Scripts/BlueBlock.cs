@@ -1,47 +1,52 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
+/// <summary>
+/// é’ãƒ–ãƒ­ãƒƒã‚¯
+/// - èµ¤ãƒ–ãƒ­ãƒƒã‚¯ã«ã®ã¿è¡çªå‡¦ç†ã‚’è¡Œã†
+/// - ç·‘ã‚„é’ãƒ–ãƒ­ãƒƒã‚¯ã«ã¯è¡çªã—ã¦ã‚‚ç„¡åŠ¹
+/// </summary>
 [RequireComponent(typeof(Rigidbody2D))]
+[RequireComponent(typeof(PolygonCollider2D))]
 public class BlueBlock : MonoBehaviour
 {
-    public int decreaseAmount = 3;  // ÔƒuƒƒbƒN‚ğ‰½Œ¸­‚³‚¹‚é‚©
+    public int value = 1;
+    public bool hasCollided = false;
+
     private Rigidbody2D rb;
+    private PolygonCollider2D poly;
 
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        poly = GetComponent<PolygonCollider2D>();
+
+        rb.freezeRotation = false;
         rb.gravityScale = 1f;
+        rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
+
+        if (poly.sharedMaterial == null)
+            poly.sharedMaterial = new PhysicsMaterial2D("BlockMaterial");
     }
 
     void OnCollisionEnter2D(Collision2D collision)
     {
+        // èµ¤ãƒ–ãƒ­ãƒƒã‚¯ã«ã®ã¿åå¿œ
         RedBlock red = collision.gameObject.GetComponent<RedBlock>();
-        if (red == null) return;
-
-        // ¥ ”’lŒ¸­
-        red.value -= decreaseAmount;
-        if (red.value < 1) red.value = 1;
-
-        // ¥ XV
-        red.ApplyAllUpdates();
-
-        // ¥ ‚à‚µ 1 ‚ğ‰º‰ñ‚Á‚½ê‡ ¨ —ÎƒuƒƒbƒN‚É•Ï‰»
-        if (red.value <= 1)
+        if (red != null)
         {
-            ConvertToGreen(red);
+            red.HandleBlueCollision(this);
         }
-
-        // ÂƒuƒƒbƒN©g‚Í–ğ–Ú‚ğI‚¦‚½‚çÁ‚·
-        Destroy(gameObject);
+        // ç·‘ã‚„é’ãƒ–ãƒ­ãƒƒã‚¯ã«ã¯ç„¡åŠ¹
     }
 
-    void ConvertToGreen(RedBlock red)
+    public void UpdatePhysics()
     {
-        // GreenBlock ƒvƒŒƒnƒu‚É’u‚«Š·‚¦‚é
-        GameObject greenPrefab = Resources.Load<GameObject>("GreenBlock");
-        if (greenPrefab != null)
-        {
-            Instantiate(greenPrefab, red.transform.position, Quaternion.identity);
-            Destroy(red.gameObject);
-        }
+        var mat = poly.sharedMaterial;
+        if (value <= 4) { rb.mass = 0.3f; mat.bounciness = 0.6f; mat.friction = 0.1f; }
+        else if (value <= 9) { rb.mass = 0.6f; mat.bounciness = 0.4f; mat.friction = 0.2f; }
+        else if (value <= 19) { rb.mass = 0.9f; mat.bounciness = 0.3f; mat.friction = 0.3f; }
+        else if (value <= 29) { rb.mass = 1.5f; mat.bounciness = 0.2f; mat.friction = 0.4f; }
+        else if (value <= 49) { rb.mass = 2.5f; mat.bounciness = 0.1f; mat.friction = 0.5f; }
+        else { rb.mass = 4f; mat.bounciness = 0.05f; mat.friction = 0.6f; }
     }
 }
