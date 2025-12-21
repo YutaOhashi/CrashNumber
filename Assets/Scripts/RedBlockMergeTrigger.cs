@@ -27,13 +27,16 @@ public class RedBlockMergeTrigger : MonoBehaviour
     void OnTriggerEnter2D(Collider2D other)
     {
         RedBlock otherBlock = other.GetComponentInParent<RedBlock>();
-        if (otherBlock != null && parentBlock != null)
-        {
-            // 同じ形状なら合体
-            if (parentBlock.shapeIndex == otherBlock.shapeIndex)
-                parentBlock.MergeWith(otherBlock);
-        }
+        // 1. 相手そのもの、または親に RedBlock がついているか探す
+        if (otherBlock == null) otherBlock = other.GetComponentInParent<RedBlock>();
 
-        // 青・緑ブロックには無効
+        // 2. 相手が赤ブロックではない（緑や青）なら、ここで完全に無視する
+        if (otherBlock == null) return; 
+
+        // 3. 相手が赤ブロックだった場合のみ、形をチェックして合体
+        if (parentBlock != null && parentBlock.shapeIndex == otherBlock.shapeIndex)
+        {
+        parentBlock.MergeWith(otherBlock);
+        }
     }
 }

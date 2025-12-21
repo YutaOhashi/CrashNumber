@@ -62,7 +62,10 @@ public class RedBlock : MonoBehaviour
     /// </summary>
     public void MergeWith(RedBlock other)
     {
+        // 相手がnull（赤ブロックではない）なら何もしない
+        if (other == null) return;
         if (isMerging || other.isMerging) return;
+        if (this.shapeIndex != other.shapeIndex) return;
 
         RedBlock smaller, bigger;
         if (this.value < other.value) { smaller = this; bigger = other; }
@@ -70,6 +73,24 @@ public class RedBlock : MonoBehaviour
         else { smaller = (this.GetInstanceID() < other.GetInstanceID()) ? this : other; bigger = (smaller == this) ? other : this; }
 
         smaller.isMerging = true;
+
+        int scoreBonus = 0;
+        switch (bigger.shapeIndex)
+        {
+            case 0: scoreBonus = 0;   break; // 〇 (Small)
+            case 1: scoreBonus = 10;   break; // □ (Medium)
+            case 2: scoreBonus = 20;   break; // △ (Large)
+            case 3: scoreBonus = 100;  break; // ☆ (Star)
+            case 4: scoreBonus = 200;  break; // ♤ (Spade)
+            case 5: scoreBonus = 400; break; // ♡ (Heart)
+        }
+
+        int totalScore = scoreBonus + bigger.value;
+        if (ScoreManager.Instance != null)
+        {
+            ScoreManager.Instance.AddScore(totalScore);
+        }
+
         bigger.value += smaller.value;
         bigger.ApplyAllUpdates();
         bigger.StartCoroutine(bigger.StabilizeAfterMerge());
@@ -92,6 +113,11 @@ public class RedBlock : MonoBehaviour
         if (blue == null || blue.hasCollided) return;
 
         blue.hasCollided = true;
+
+        if (ScoreManager.Instance != null)
+        {
+        ScoreManager.Instance.AddScore(-blue.value);
+        }
 
         int newValue = value - blue.value;
         Destroy(blue.gameObject);
