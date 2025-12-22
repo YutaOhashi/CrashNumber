@@ -145,6 +145,8 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 0c8eece9c6ef9014584b67c35a01f398, type: 3}
   text: {fileID: 6626284998718690161}
   greenPrefab: {fileID: 6037284058314114782, guid: 3f9c29cbc51bb244585e5e5305a2f7c6, type: 3}
+  mergeEffectPrefab: {fileID: 4137279050765738652, guid: 825e40b7d8f6b6a45a6e747910949791, type: 3}
+  eraseEffectPrefab: {fileID: 8021720165238385941, guid: 4d8dc9e694e006744b3a0b2ca9f4615e, type: 3}
   rb: {fileID: 0}
   shapeIndex: 0
 --- !u!60 &8270693112510031299
@@ -439,6 +441,7 @@ GameObject:
   - component: {fileID: 6496224456876391269}
   - component: {fileID: 4864176441845531893}
   - component: {fileID: 3829878971874984238}
+  - component: {fileID: 8138209150828248805}
   m_Layer: 0
   m_Name: MergeTrigger
   m_TagString: Untagged
@@ -525,3 +528,39 @@ PolygonCollider2D:
       - {x: 0.58778536, y: -0.80901694}
       - {x: 0.9510565, y: 0.30901712}
   m_UseDelaunayMesh: 0
+--- !u!58 &8138209150828248805
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7311094798086692582}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_Radius: 0.5

@@ -20,6 +20,10 @@ public class RedBlock : MonoBehaviour
     [Header("Prefab References")]
     public GameObject greenPrefab;              // 緑ブロックに変換するPrefab
 
+    [Header("Effects")]
+    public GameObject mergeEffectPrefab; // 合体エフェクト（キラキラ）
+    public GameObject eraseEffectPrefab; // 消滅エフェクト（煙）
+
     private SpriteRenderer sr;
     public Rigidbody2D rb;
     private PolygonCollider2D poly;
@@ -43,6 +47,14 @@ public class RedBlock : MonoBehaviour
     void Start()
     {
         ApplyAllUpdates();
+    }
+
+    void PlayEffect(GameObject effectPrefab, Vector3 position)
+    {
+        if (effectPrefab != null)
+        {
+            Instantiate(effectPrefab, position, Quaternion.identity);
+        }
     }
 
     /// <summary>
@@ -73,6 +85,8 @@ public class RedBlock : MonoBehaviour
         else { smaller = (this.GetInstanceID() < other.GetInstanceID()) ? this : other; bigger = (smaller == this) ? other : this; }
 
         smaller.isMerging = true;
+
+        PlayEffect(mergeEffectPrefab, smaller.transform.position);
 
         int scoreBonus = 0;
         switch (bigger.shapeIndex)
@@ -120,6 +134,9 @@ public class RedBlock : MonoBehaviour
         }
 
         int newValue = value - blue.value;
+
+        PlayEffect(eraseEffectPrefab, blue.transform.position);
+
         Destroy(blue.gameObject);
 
         if (newValue < 0)
@@ -140,7 +157,9 @@ public class RedBlock : MonoBehaviour
     }
 
     void ConvertToGreen(int greenValue)
-    {
+    {   
+        PlayEffect(eraseEffectPrefab, transform.position);
+
         if (greenPrefab != null)
         {
             GameObject green = Instantiate(greenPrefab, transform.position, Quaternion.identity);
