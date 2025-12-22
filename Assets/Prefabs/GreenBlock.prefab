@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 6305146662601677065}
   - component: {fileID: 7638285818300798631}
   - component: {fileID: 2911062527651441510}
+  - component: {fileID: 7707204557476554916}
   m_Layer: 0
   m_Name: MergeTrigger
   m_TagString: Untagged
@@ -97,6 +98,42 @@ PolygonCollider2D:
       - {x: 0.58778536, y: -0.80901694}
       - {x: 0.9510565, y: 0.30901712}
   m_UseDelaunayMesh: 0
+--- !u!58 &7707204557476554916
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1974559103182135324}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_Radius: 0.5
 --- !u!1 &2887419112500767377
 GameObject:
   m_ObjectHideFlags: 0
@@ -287,7 +324,6 @@ GameObject:
   - component: {fileID: 6534910735967367881}
   - component: {fileID: 8541319989413601983}
   - component: {fileID: 1642182305558651633}
-  - component: {fileID: 221779407956088053}
   - component: {fileID: 762686914455873276}
   - component: {fileID: 3327335397016446822}
   - component: {fileID: 383325588208140807}
@@ -400,30 +436,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 0
---- !u!114 &221779407956088053
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6037284058314114782}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4cec9c3320b25e54c9ee402b91a81164, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::RedBlock
-  value: 1
-  shapes:
-  - {fileID: 21300000, guid: 48ea88b5595c6b04fbaac9fa345d4f15, type: 3}
-  - {fileID: 21300000, guid: e44f086917e48ca448a656fe0a4e39a8, type: 3}
-  - {fileID: 21300000, guid: 82dca1c6e3243084bb515ef1db3c62a6, type: 3}
-  - {fileID: 21300000, guid: 220df581cb4c3074cbb23aa48eab1305, type: 3}
-  - {fileID: 21300000, guid: 81c7a7c4b34cb614ba561b8af69419f1, type: 3}
-  - {fileID: 21300000, guid: 0c8eece9c6ef9014584b67c35a01f398, type: 3}
-  text: {fileID: 6961247583616573490}
-  greenPrefab: {fileID: 0}
-  rb: {fileID: 0}
-  shapeIndex: 0
 --- !u!60 &762686914455873276
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -538,3 +550,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49ef585b89e989a4fa17dd59cd471eee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GreenBlock
+  value: 1
+  shapes:
+  - {fileID: 21300000, guid: 48ea88b5595c6b04fbaac9fa345d4f15, type: 3}
+  - {fileID: 21300000, guid: e44f086917e48ca448a656fe0a4e39a8, type: 3}
+  - {fileID: 21300000, guid: 82dca1c6e3243084bb515ef1db3c62a6, type: 3}
+  - {fileID: 21300000, guid: 220df581cb4c3074cbb23aa48eab1305, type: 3}
+  - {fileID: 21300000, guid: 81c7a7c4b34cb614ba561b8af69419f1, type: 3}
+  - {fileID: 21300000, guid: 0c8eece9c6ef9014584b67c35a01f398, type: 3}
+  text: {fileID: 0}

@@ -77,11 +77,11 @@ public class RedBlock : MonoBehaviour
         int scoreBonus = 0;
         switch (bigger.shapeIndex)
         {
-            case 0: scoreBonus = 0;   break; // 〇 (Small)
-            case 1: scoreBonus = 10;   break; // □ (Medium)
-            case 2: scoreBonus = 20;   break; // △ (Large)
-            case 3: scoreBonus = 100;  break; // ☆ (Star)
-            case 4: scoreBonus = 200;  break; // ♤ (Spade)
+            case 0: scoreBonus = 0; break; // 〇 (Small)
+            case 1: scoreBonus = 10; break; // □ (Medium)
+            case 2: scoreBonus = 20; break; // △ (Large)
+            case 3: scoreBonus = 100; break; // ☆ (Star)
+            case 4: scoreBonus = 200; break; // ♤ (Spade)
             case 5: scoreBonus = 400; break; // ♡ (Heart)
         }
 
@@ -116,7 +116,7 @@ public class RedBlock : MonoBehaviour
 
         if (ScoreManager.Instance != null)
         {
-        ScoreManager.Instance.AddScore(-blue.value);
+            ScoreManager.Instance.AddScore(-blue.value);
         }
 
         int newValue = value - blue.value;
@@ -147,7 +147,7 @@ public class RedBlock : MonoBehaviour
             GreenBlock greenBlock = green.GetComponent<GreenBlock>();
             if (greenBlock != null)
             {
-                greenBlock.Initialize(greenValue);
+                greenBlock.Initialize(Mathf.Abs(greenValue)); // 絶対値で渡す
             }
         }
         Destroy(gameObject);
@@ -162,13 +162,6 @@ public class RedBlock : MonoBehaviour
         if (otherRed != null && shapeIndex == otherRed.shapeIndex)
         {
             MergeWith(otherRed);
-        }
-
-        // 青ブロックとの衝突
-        BlueBlock blue = collision.gameObject.GetComponent<BlueBlock>();
-        if (blue != null)
-        {
-            HandleBlueCollision(blue);
         }
 
         // 緑ブロックには何もしない

@@ -2,10 +2,6 @@
 using TMPro;
 using System.Collections.Generic;
 
-/// <summary>
-/// 緑ブロック
-/// - どのブロックとも合体しない
-/// </summary>
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(PolygonCollider2D))]
 public class GreenBlock : MonoBehaviour
@@ -24,16 +20,7 @@ public class GreenBlock : MonoBehaviour
         sr = GetComponent<SpriteRenderer>();
         rb = GetComponent<Rigidbody2D>();
         poly = GetComponent<PolygonCollider2D>();
-
-        rb.freezeRotation = false;
-        rb.gravityScale = 1f;
-        rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
-
-        if (poly.sharedMaterial == null)
-            poly.sharedMaterial = new PhysicsMaterial2D("BlockMaterial");
     }
-
-    void Start() => ApplyAllUpdates();
 
     public void Initialize(int newValue)
     {
@@ -41,7 +28,7 @@ public class GreenBlock : MonoBehaviour
         ApplyAllUpdates();
     }
 
-    public void ApplyAllUpdates()
+    void ApplyAllUpdates()
     {
         UpdateShape();
         RefreshCollider();
@@ -58,15 +45,17 @@ public class GreenBlock : MonoBehaviour
     #region 更新処理
     public void UpdateShape()
     {
-        if (value <= 4) shapeIndex = 0;
-        else if (value <= 9) shapeIndex = 1;
-        else if (value <= 19) shapeIndex = 2;
-        else if (value <= 29) shapeIndex = 3;
-        else if (value <= 49) shapeIndex = 4;
-        else shapeIndex = 5;
+        if (value <= 4) shapeIndex = 0;        // 〇
+        else if (value <= 9) shapeIndex = 1;   // □
+        else if (value <= 19) shapeIndex = 2;  // △
+        else if (value <= 29) shapeIndex = 3;  // ☆
+        else if (value <= 49) shapeIndex = 4;  // ♤
+        else shapeIndex = 5;                   // ♡
 
         if (sr != null && shapes != null && shapes.Length > shapeIndex)
+        {
             sr.sprite = shapes[shapeIndex];
+        }
     }
 
     public void RefreshCollider()
@@ -85,13 +74,18 @@ public class GreenBlock : MonoBehaviour
 
     public void UpdatePhysics()
     {
-        var mat = poly.sharedMaterial;
+        if (rb == null) return;
+
+        PhysicsMaterial2D mat = new PhysicsMaterial2D("GreenBlockMaterial");
+
         if (value <= 4) { rb.mass = 0.3f; mat.bounciness = 0.6f; mat.friction = 0.1f; }
         else if (value <= 9) { rb.mass = 0.6f; mat.bounciness = 0.4f; mat.friction = 0.2f; }
         else if (value <= 19) { rb.mass = 0.9f; mat.bounciness = 0.3f; mat.friction = 0.3f; }
         else if (value <= 29) { rb.mass = 1.5f; mat.bounciness = 0.2f; mat.friction = 0.4f; }
         else if (value <= 49) { rb.mass = 2.5f; mat.bounciness = 0.1f; mat.friction = 0.5f; }
         else { rb.mass = 4f; mat.bounciness = 0.05f; mat.friction = 0.6f; }
+
+        rb.sharedMaterial = mat;
     }
 
     public void UpdateVisualScale()
@@ -111,7 +105,8 @@ public class GreenBlock : MonoBehaviour
 
     public void UpdateText()
     {
-        if (text != null) text.text = value.ToString();
+        if (text != null)
+            text.text = value.ToString();
     }
     #endregion
 }

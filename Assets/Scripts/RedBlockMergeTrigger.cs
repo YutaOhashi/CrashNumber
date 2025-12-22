@@ -31,12 +31,12 @@ public class RedBlockMergeTrigger : MonoBehaviour
         if (otherBlock == null) otherBlock = other.GetComponentInParent<RedBlock>();
 
         // 2. 相手が赤ブロックではない（緑や青）なら、ここで完全に無視する
-        if (otherBlock == null) return; 
+        if (otherBlock == null) return;
 
         // 3. 相手が赤ブロックだった場合のみ、形をチェックして合体
         if (parentBlock != null && parentBlock.shapeIndex == otherBlock.shapeIndex)
         {
-        parentBlock.MergeWith(otherBlock);
+            parentBlock.MergeWith(otherBlock);
         }
     }
 }
