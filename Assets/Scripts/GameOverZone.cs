@@ -2,23 +2,22 @@ using UnityEngine;
 
 public class GameOverZone : MonoBehaviour
 {
-    public GameObject gameOverText; // ƒQ[ƒ€ƒI[ƒo[‚Ì•¶š
-    public float timeLimit = 2.0f;  // ‰½•b‚Í‚İo‚µ‚½‚çƒAƒEƒg‚©
+    public GameObject gameOverText; // ï¿½Qï¿½[ï¿½ï¿½ï¿½Iï¿½[ï¿½oï¿½[ï¿½Ì•ï¿½ï¿½ï¿½
+    public float timeLimit = 2.0f;  // ï¿½ï¿½ï¿½bï¿½Í‚İoï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Aï¿½Eï¿½gï¿½ï¿½
 
-    private float timer = 0f;       // ŠÔŒv‘ª—p
+    private float timer = 0f;       // ï¿½ï¿½ï¿½ÔŒvï¿½ï¿½ï¿½p
 
-    // G‚ê‚Ä‚¢‚éŠÔ‚¸‚Á‚ÆŒÄ‚Î‚ê‚é
+    // ï¿½Gï¿½ï¿½Ä‚ï¿½ï¿½ï¿½Ô‚ï¿½ï¿½ï¿½ï¿½ÆŒÄ‚Î‚ï¿½ï¿½
     void OnTriggerStay2D(Collider2D collision)
     {
-        // ‚Ô‚Â‚©‚Á‚Ä‚¢‚é‚Ì‚ªuƒuƒƒbƒNv‚©‚Ç‚¤‚©Šm”F
+        // ï¿½Ô‚Â‚ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½Ì‚ï¿½ï¿½uï¿½uï¿½ï¿½ï¿½bï¿½Nï¿½vï¿½ï¿½ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½mï¿½F
         if (collision.GetComponent<RedBlock>() != null || 
-            collision.GetComponent<GreenBlock>() != null ||
-            collision.GetComponent<BlueBlock>() != null)
+            collision.GetComponent<GreenBlock>() != null)
         {
-            // ‚¸‚Á‚ÆG‚ê‚Ä‚¢‚½‚çƒ^ƒCƒ}[‚ği‚ß‚é
+            // ï¿½ï¿½ï¿½ï¿½ï¿½ÆGï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ï¿½ï¿½^ï¿½Cï¿½}ï¿½[ï¿½ï¿½iï¿½ß‚ï¿½
             timer += Time.deltaTime;
 
-            // §ŒÀŠÔ‚ğ’´‚¦‚½‚çƒQ[ƒ€ƒI[ƒo[I
+            // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô‚ğ’´‚ï¿½ï¿½ï¿½ï¿½ï¿½Qï¿½[ï¿½ï¿½ï¿½Iï¿½[ï¿½oï¿½[ï¿½I
             if (timer > timeLimit)
             {
                 GameOver();
@@ -26,7 +25,7 @@ public class GameOverZone : MonoBehaviour
         }
     }
 
-    // —£‚ê‚½‚çƒŠƒZƒbƒg
+    // ï¿½ï¿½ï¿½ê‚½ï¿½çƒŠï¿½Zï¿½bï¿½g
     void OnTriggerExit2D(Collider2D collision)
     {
         timer = 0f;
@@ -36,13 +35,13 @@ public class GameOverZone : MonoBehaviour
     {
         Debug.Log("Game Over!");
         
-        // •¶š‚ğ•\¦‚·‚é
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½\ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         if (gameOverText != null)
         {
             gameOverText.SetActive(true);
         }
 
-        // ƒQ[ƒ€‚ÌŠÔ‚ğ~‚ß‚é
+        // ï¿½Qï¿½[ï¿½ï¿½ï¿½Ìï¿½ï¿½Ô‚ï¿½ï¿½~ï¿½ß‚ï¿½
         Time.timeScale = 0f;
     }
 }

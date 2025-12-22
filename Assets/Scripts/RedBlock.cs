@@ -107,8 +107,6 @@ public class RedBlock : MonoBehaviour
 
         bigger.value += smaller.value;
         bigger.ApplyAllUpdates();
-        bigger.StartCoroutine(bigger.StabilizeAfterMerge());
-
         Destroy(smaller.gameObject);
     }
 
@@ -174,6 +172,25 @@ public class RedBlock : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
+        RedBlock other = collision.gameObject.GetComponent<RedBlock>();
+        if (other != null && this.shapeIndex == 5 && other.shapeIndex == 5)
+        {
+            // 点数の二重取りを防ぐため、片方（IDが小さい方）だけが代表して計算する
+            if (this.GetInstanceID() < other.GetInstanceID())
+            {
+                if (ScoreManager.Instance != null)
+                {
+                    // ハートのボーナス点(400) + ブロックの数字
+                    int totalScore = 400 + this.value;
+                    ScoreManager.Instance.AddScore(totalScore);
+                }
+                
+                Destroy(this.gameObject);      // 自分を消す
+                Destroy(other.gameObject);     // 相手も消す
+            }
+            return; // ここで処理終了（通常の合体には進ませない）
+        }
+
         if (isMerging) return;
 
         // 赤ブロック同士の合体
@@ -219,10 +236,10 @@ public class RedBlock : MonoBehaviour
         var mat = poly.sharedMaterial;
         if (value <= 4) { rb.mass = 0.3f; mat.bounciness = 0.6f; mat.friction = 0.1f; }
         else if (value <= 9) { rb.mass = 0.6f; mat.bounciness = 0.4f; mat.friction = 0.2f; }
-        else if (value <= 19) { rb.mass = 0.9f; mat.bounciness = 0.3f; mat.friction = 0.3f; }
-        else if (value <= 29) { rb.mass = 1.5f; mat.bounciness = 0.2f; mat.friction = 0.4f; }
-        else if (value <= 49) { rb.mass = 2.5f; mat.bounciness = 0.1f; mat.friction = 0.5f; }
-        else { rb.mass = 4f; mat.bounciness = 0.05f; mat.friction = 0.6f; }
+        else if (value <= 19) { rb.mass = 0.6f; mat.bounciness = 0.3f; mat.friction = 0.3f; }
+        else if (value <= 29) { rb.mass = 0.6f; mat.bounciness = 0.2f; mat.friction = 0.4f; }
+        else if (value <= 49) { rb.mass = 0.6f; mat.bounciness = 0.1f; mat.friction = 0.5f; }
+        else { rb.mass = 4f; mat.bounciness = 0.05f; mat.friction = 0.3f; }
     }
 
     public void UpdateVisualScale()
