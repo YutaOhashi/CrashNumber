@@ -235,10 +235,10 @@ public class RedBlock : MonoBehaviour
     {
         var mat = poly.sharedMaterial;
         if (value <= 4) { rb.mass = 0.3f; mat.bounciness = 0.6f; mat.friction = 0.1f; }
-        else if (value <= 9) { rb.mass = 0.6f; mat.bounciness = 0.4f; mat.friction = 0.2f; }
-        else if (value <= 19) { rb.mass = 0.6f; mat.bounciness = 0.3f; mat.friction = 0.3f; }
-        else if (value <= 29) { rb.mass = 0.6f; mat.bounciness = 0.2f; mat.friction = 0.4f; }
-        else if (value <= 49) { rb.mass = 0.6f; mat.bounciness = 0.1f; mat.friction = 0.5f; }
+        else if (value <= 9) { rb.mass = 0.3f; mat.bounciness = 0.4f; mat.friction = 0.2f; }
+        else if (value <= 19) { rb.mass = 0.3f; mat.bounciness = 0.3f; mat.friction = 0.3f; }
+        else if (value <= 29) { rb.mass = 0.3f; mat.bounciness = 0.2f; mat.friction = 0.3f; }
+        else if (value <= 49) { rb.mass = 0.3f; mat.bounciness = 0.1f; mat.friction = 0.4f; }
         else { rb.mass = 4f; mat.bounciness = 0.05f; mat.friction = 0.3f; }
     }
 
@@ -247,12 +247,12 @@ public class RedBlock : MonoBehaviour
         float scale = 1f;
         switch (shapeIndex)
         {
-            case 0: scale = 0.2f; break;
-            case 1: scale = 0.4f; break;
-            case 2: scale = 0.6f; break;
-            case 3: scale = 0.8f; break;
-            case 4: scale = 0.5f; break;
-            case 5: scale = 1.2f; break;
+            case 0: scale = 0.3f; break;
+            case 1: scale = 0.5f; break;
+            case 2: scale = 0.7f; break;
+            case 3: scale = 0.9f; break;
+            case 4: scale = 0.8f; break;
+            case 5: scale = 1.9f; break;
         }
         transform.localScale = Vector3.one * scale;
     }

@@ -2,46 +2,102 @@ using UnityEngine;
 
 public class GameOverZone : MonoBehaviour
 {
-    public GameObject gameOverText; // ï¿½Qï¿½[ï¿½ï¿½ï¿½Iï¿½[ï¿½oï¿½[ï¿½Ì•ï¿½ï¿½ï¿½
-    public float timeLimit = 2.0f;  // ï¿½ï¿½ï¿½bï¿½Í‚İoï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Aï¿½Eï¿½gï¿½ï¿½
+    public GameObject gameOverText; // •\¦‚·‚é•¶š
+    public float timeLimit = 2.0f;  // ‰ä–‚·‚éŠÔi•bj
 
-    private float timer = 0f;       // ï¿½ï¿½ï¿½ÔŒvï¿½ï¿½ï¿½p
+    private float timer = 0f;
+    private BoxCollider2D myCollider; // ©•ª‚ÌƒZƒ“ƒT[”ÍˆÍ
 
-    // ï¿½Gï¿½ï¿½Ä‚ï¿½ï¿½ï¿½Ô‚ï¿½ï¿½ï¿½ï¿½ÆŒÄ‚Î‚ï¿½ï¿½
-    void OnTriggerStay2D(Collider2D collision)
+    void Start()
     {
-        // ï¿½Ô‚Â‚ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½Ì‚ï¿½ï¿½uï¿½uï¿½ï¿½ï¿½bï¿½Nï¿½vï¿½ï¿½ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½mï¿½F
-        if (collision.GetComponent<RedBlock>() != null || 
-            collision.GetComponent<GreenBlock>() != null)
-        {
-            // ï¿½ï¿½ï¿½ï¿½ï¿½ÆGï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ï¿½ï¿½^ï¿½Cï¿½}ï¿½[ï¿½ï¿½iï¿½ß‚ï¿½
-            timer += Time.deltaTime;
+        // ©•ª‚Ì“–‚½‚è”»’è‚ğæ“¾
+        myCollider = GetComponent<BoxCollider2D>();
+    }
 
-            // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô‚ğ’´‚ï¿½ï¿½ï¿½ï¿½ï¿½Qï¿½[ï¿½ï¿½ï¿½Iï¿½[ï¿½oï¿½[ï¿½I
-            if (timer > timeLimit)
+    void Update()
+    {
+        // ƒŒ[ƒ_[’TõŠJn
+        // 1. ©•ª‚ÌêŠ‚ÆƒTƒCƒY‚ğŒvZi­‚µ‚¾‚¯¬‚³‚­‚µ‚ÄŒëì“®‚ğ–h‚®j
+        Vector2 point = (Vector2)transform.position + (myCollider.offset * transform.localScale);
+        Vector2 size = myCollider.size * transform.localScale * 0.9f; 
+        float angle = transform.eulerAngles.z;
+
+        // 2. ‚»‚Ì”ÍˆÍ‚É‚¢‚é‘Sˆõ‚ğŒ©‚Â‚¯o‚·iOverlapBoxAllj
+        Collider2D[] hits = Physics2D.OverlapBoxAll(point, size, angle);
+
+        bool isBlockInZone = false;
+
+        // 3. Œ©‚Â‚¯‚½‚à‚Ì‚ªƒuƒƒbƒN‚©Šm”F
+        foreach (Collider2D hit in hits)
+        {
+            if (hit.gameObject == gameObject) continue; // ©•ª‚Í–³‹
+
+            // eƒIƒuƒWƒFƒNƒg‚àŠÜ‚ß‚ÄuƒuƒƒbƒNv‚©’²‚×‚é
+            if (IsBlock(hit))
             {
-                GameOver();
+                isBlockInZone = true;
+                break; // ‚Ğ‚Æ‚Â‚Å‚à‚ ‚ê‚ÎOK
             }
+        }
+
+        // 4. ƒ^ƒCƒ}[ˆ—
+        if (isBlockInZone)
+        {
+            timer += Time.deltaTime; // ŠÔ‚ği‚ß‚é
+        }
+        else
+        {
+            timer = 0f; // ƒuƒƒbƒN‚ª‚¢‚È‚­‚È‚Á‚½‚çƒŠƒZƒbƒg
+        }
+
+        // 5. §ŒÀŠÔ‚ğ’´‚¦‚½‚çƒQ[ƒ€ƒI[ƒo[
+        if (timer > timeLimit)
+        {
+            GameOver();
         }
     }
 
-    // ï¿½ï¿½ï¿½ê‚½ï¿½çƒŠï¿½Zï¿½bï¿½g
-    void OnTriggerExit2D(Collider2D collision)
+    // ‚±‚ê‚Íu‚»‚ê‚ªƒuƒƒbƒN‚©‚Ç‚¤‚©v‚ğŒ©•ª‚¯‚é•Ö—˜‚ÈŠÖ”
+    bool IsBlock(Collider2D col)
     {
-        timer = 0f;
+        // e‚ğ‚½‚Ç‚Á‚ÄRigidbody‚ğ’T‚·
+        Rigidbody2D rb = col.GetComponentInParent<Rigidbody2D>();
+        
+        // ƒvƒŒƒCƒ„[‚ª‘€ì’†iKinematicj‚È‚ç–³‹‚·‚é
+        if (rb != null && rb.bodyType == RigidbodyType2D.Kinematic) return false;
+
+        // ÔE—ÎEÂƒuƒƒbƒN‚ÌƒXƒNƒŠƒvƒg‚ª‚Â‚¢‚Ä‚¢‚é‚©ie‚àŠÜ‚ß‚ÄjŠm”F
+        if (col.GetComponentInParent<RedBlock>() != null || 
+            col.GetComponentInParent<GreenBlock>() != null ||
+            col.GetComponentInParent<BlueBlock>() != null)
+        {
+            return true;
+        }
+        return false;
     }
 
     void GameOver()
     {
         Debug.Log("Game Over!");
         
-        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½\ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        // •¶š‚ğ•\¦‚·‚é
         if (gameOverText != null)
         {
             gameOverText.SetActive(true);
         }
 
-        // ï¿½Qï¿½[ï¿½ï¿½ï¿½Ìï¿½ï¿½Ô‚ï¿½ï¿½~ï¿½ß‚ï¿½
+        // ŠÔ‚ğ~‚ß‚é
         Time.timeScale = 0f;
+    }
+
+    // ƒfƒoƒbƒO—pFUnity‚Ì•ÒW‰æ–Ê‚ÅÔ‚¢lŠp‚ğ•\¦‚·‚é‹@”\
+    void OnDrawGizmos()
+    {
+        if (myCollider == null) myCollider = GetComponent<BoxCollider2D>();
+        Gizmos.color = new Color(1, 0, 0, 0.3f);
+        Vector3 size = myCollider.size;
+        size.x *= transform.localScale.x * 0.9f;
+        size.y *= transform.localScale.y * 0.9f;
+        Gizmos.DrawCube(transform.position + (Vector3)myCollider.offset, size);
     }
 }
