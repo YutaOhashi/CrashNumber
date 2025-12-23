@@ -791,8 +791,8 @@ Transform:
   m_GameObject: {fileID: 1178185606}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 4, z: 0}
-  m_LocalScale: {x: 3.2, y: 0.1, z: 1}
+  m_LocalPosition: {x: 0.02, y: 4.1566, z: 0}
+  m_LocalScale: {x: 3.2, y: 0.06758444, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -965,10 +965,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "[ CONTROLS ]\r\nA / D : Move\r\nF : Drop\r\nQ : Color Change\r\n\r\n[
-    RULES ]\r\nSame Number\r\n = Merge\r\n\r\nBlue Block\r\n = Subtract\n\nCircles
-    merged = 10 pts\n\nSquares merged = 20 pts\n\nTriangles merged = 100 pts\n\nStars
-    merged = 200 pts\n\nSpades merged = 400 pts"
+  m_text: "[ CONTROLS ape\r\nA / D : Move\r\nF : Drop\r\nQ : Color Change\n(10-times
+    limit)\r\n\r\n[ RULES ]\r\nSame shape\r\n = Merge\r\n\r\nBlue Block\r\n = decrease\n(Score
+    also decrease)\n\nSquares merged = 10 pts\n\nTriangles merged = 20 pts\n\nStars
+    merged = 100 pts\n\nSpades merged = 200 pts\n\nHarts merged = 400 pts"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

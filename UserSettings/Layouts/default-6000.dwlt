@@ -99,7 +99,7 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 100}
   m_MaxSize: {x: 24288, y: 16192}
   vertical: 0
-  controlID: 15
+  controlID: 102
   draggingID: 0
 --- !u!114 &5
 MonoBehaviour:
@@ -399,14 +399,14 @@ MonoBehaviour:
   m_LastFolders:
   - Assets/Scripts
   m_LastFoldersGridSize: -1
-  m_LastProjectPath: C:\Users\Riku\dejikonn\CrashNumber
+  m_LastProjectPath: C:\Users\kento\degital_contents\CrashNumber
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: 96b90000
-    m_LastClickedID: 47510
-    m_ExpandedIDs: 000000002eb9000030b9000032b9000034b9000036b9000038b900003ab900003cb90000
+    m_SelectedIDs: cab90000
+    m_LastClickedID: 47562
+    m_ExpandedIDs: 0000000066b9000068b900006ab900006cb900006eb9000070b9000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -435,7 +435,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 000000002eb9000030b9000032b9000034b9000036b9000038b900003ab900003cb90000
+    m_ExpandedIDs: 0000000066b9000068b900006ab900006cb900006eb9000070b90000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -489,7 +489,7 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
     m_NewAssetIndexInList: -1
-    m_ScrollPosition: {x: 0, y: 0}
+    m_ScrollPosition: {x: 0, y: 323.49915}
     m_GridSize: 64
   m_SkipHiddenPackages: 0
   m_DirectoriesAreaWidth: 60.666626
@@ -562,7 +562,7 @@ MonoBehaviour:
     m_HSlider: 0
     m_VSlider: 0
     m_IgnoreScrollWheelUntilClicked: 0
-    m_EnableMouseInput: 0
+    m_EnableMouseInput: 1
     m_EnableSliderZoomHorizontal: 0
     m_EnableSliderZoomVertical: 0
     m_UniformScale: 1
@@ -617,7 +617,7 @@ MonoBehaviour:
     serializedVersion: 2
     x: 0
     y: 78.66667
-    width: 893
+    width: 911
     height: 830
   m_SerializedDataModeController:
     m_DataMode: 0
@@ -1173,9 +1173,9 @@ MonoBehaviour:
   m_AudioPlay: 0
   m_DebugDrawModesUseInteractiveLightBakingData: 0
   m_Position:
-    m_Target: {x: 0, y: 0, z: 0}
+    m_Target: {x: -0.0995879, y: -0.23240197, z: 0}
     speed: 2
-    m_Value: {x: 0, y: 0, z: 0}
+    m_Value: {x: -0.0995879, y: -0.23240197, z: 0}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -1300,9 +1300,9 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: 
-      m_LastClickedID: 0
-      m_ExpandedIDs: 00fbffff
+      m_SelectedIDs: 6ab70000
+      m_LastClickedID: 46954
+      m_ExpandedIDs: c0faffffaeb70000
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
