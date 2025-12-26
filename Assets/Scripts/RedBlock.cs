@@ -24,6 +24,8 @@ public class RedBlock : MonoBehaviour
     public GameObject mergeEffectPrefab; // 合体エフェクト（キラキラ）
     public GameObject eraseEffectPrefab; // 消滅エフェクト（煙）
 
+    private const float WALL_X_POS = 3.6f;
+
     private SpriteRenderer sr;
     public Rigidbody2D rb;
     private PolygonCollider2D poly;
@@ -106,6 +108,26 @@ public class RedBlock : MonoBehaviour
         }
 
         bigger.value += smaller.value;
+
+        Vector3 newPos = bigger.transform.position;
+
+        // X座標が0より大きければ右の壁(3.6)、0以下なら左の壁(-3.6)へ
+        // ※ブロックが壁に埋まりすぎる場合は、3.6fを少し小さくする等の調整をしてください
+        if (newPos.x > 0)
+        {
+            newPos.x = WALL_X_POS;  // 右側の壁へ
+        }
+        else
+        {
+            newPos.x = -WALL_X_POS; // 左側の壁へ
+        }
+
+        if (bigger.rb != null)
+        {
+            bigger.rb.linearVelocity = Vector2.zero;
+            bigger.rb.angularVelocity = 0f;
+        }
+
         bigger.ApplyAllUpdates();
         Destroy(smaller.gameObject);
     }
